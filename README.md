@@ -10,13 +10,11 @@ The Vagrant file handles version numbers 10,11,12,13,14
 
 Place pkg files in data/pkg
 
-http://tug.org/cgi-bin/mactex-download/BasicTeX.pkg
-https://www.xquartz.org/  (extract pkg from dmg)
-https://www.python.org/downloads/mac-osx/
-https://www.oracle.com/technetwork/java/javase/downloads/
-
-place tar.bz2 in data/pkg
-https://www.samba.org/ftp/ccache/ccache-3.6.tar.bz2
+ * latex distribution: http://tug.org/cgi-bin/mactex-download/BasicTeX.pkg
+ * Xquartz (needed for fink installation) https://www.xquartz.org/  (extract pkg from dmg)
+ * Testing Jupyter notebooks: https://www.python.org/downloads/mac-osx/
+ * Java: Download from https://www.oracle.com/technetwork/java/javase/downloads/, it is necessary to accept license agreement
+ * ccache, place tar.bz2 in data/pkg: https://www.samba.org/ftp/ccache/ccache-3.6.tar.bz2
 
 == Shared folders ==
 
