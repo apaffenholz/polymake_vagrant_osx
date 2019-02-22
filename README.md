@@ -2,9 +2,9 @@
 
 == OSX vagrant boxes ==
 
-Required naming scheme: osx-10.<version>
-
-The Vagrant file handles version numbers 10,11,12,13,14
+ * Required naming scheme for vagrant boxes: osx-10.<version>
+ * The Vagrant file handles version numbers 10,11,12,13,14
+ * boxes must have command line tools preinstalled
 
 == Get necessary packages ==
 
