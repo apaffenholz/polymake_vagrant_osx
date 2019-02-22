@@ -5,6 +5,13 @@
  * Required naming scheme for vagrant boxes: osx-10.<version>
  * The Vagrant file handles version numbers 10,11,12,13,14
  * boxes must have command line tools preinstalled
+  
+== vms created by Vagrantfile ==
+ 
+ * osx.<version>.plain: downlaod and compile all dependences for polymake 
+ * osx.<version>.brew: resolve dependences with brew before compiling polymake
+ * osx.<version>.fink: resolve dependences with fink before compiling polymake (currently untested)
+ * osx.<version>.bundle: create a polymake binary bundle for the osx version <version>
 
 == Get necessary packages ==
 
