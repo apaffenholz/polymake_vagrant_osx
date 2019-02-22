@@ -1,19 +1,23 @@
-=== Vagrant environment for testing polymake builds on osx ===
+Vagrant environment for testing polymake builds on osx
+======
 
-== OSX vagrant boxes ==
+OSX vagrant boxes
+------
 
  * Required naming scheme for vagrant boxes: osx-10.<version>
  * The Vagrant file handles version numbers 10,11,12,13,14
  * boxes must have command line tools preinstalled
   
-== vms created by Vagrantfile ==
+vms created by Vagrantfile
+------
  
  * osx.<version>.plain: downlaod and compile all dependences for polymake 
  * osx.<version>.brew: resolve dependences with brew before compiling polymake
  * osx.<version>.fink: resolve dependences with fink before compiling polymake (currently untested)
  * osx.<version>.bundle: create a polymake binary bundle for the osx version <version>
 
-== Get necessary packages ==
+Get necessary packages
+------
 
 Place pkg files in data/pkg
 
@@ -23,7 +27,8 @@ Place pkg files in data/pkg
  * Java: Download from https://www.oracle.com/technetwork/java/javase/downloads/, it is necessary to accept license agreement
  * ccache, place tar.bz2 in data/pkg: https://www.samba.org/ftp/ccache/ccache-3.6.tar.bz2
 
-== Shared folders ==
+Shared folders
+------
 
 Two folders are shared with the vm
 
