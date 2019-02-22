@@ -1,0 +1,9 @@
+.vagrant
+share/dependencies
+share/osx*
+share/polymake
+share/src
+share/tar
+share/bundles
+data/pkg
+other/
