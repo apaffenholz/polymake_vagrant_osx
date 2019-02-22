@@ -1,0 +1,38 @@
+{
+   "memory" : 4096,
+   "cores" : 2,
+   "data_source" : "data/",
+   "shared_source" : "share/",
+   "jdk_version" : "11.0.2",
+   "xquartz_version" : "XQuartz",
+   "tex_version" : "mactex-basictex-20180417",
+   "python" : {
+      "version" : "3.8.0a1",
+      "pkg_name" : "python-3.8.0a1-macosx10.9"
+   },
+   "ccache" : {
+      "version" : "3.6",
+      "pkg_name" : "ccache-3.6"
+   },
+   "host_ssh_port_base" : 2230,
+   "host_http_port_base" : 8100, 
+   "host_jupyter_port_base" : 8800, 
+   "polymake_root" : "data/polymake_src",
+   "os_versions" : [10,11,12,13,14],
+   "types" : ["brew","fink","plain","bundle"],
+   "branches" : ["master","feature/bundled/polydb"],
+   "type" : {
+      "brew" : {
+      },
+      "fink" : {
+         "fink_base" : "https://github.com/fink/scripts/releases/download/setup%2F",
+         "fink_version" : "0.44.0",
+         "fink_install_tool_name" : "InstallFink.tgz"
+      },
+      "plain" : {
+      }
+   },
+   "os_version" : {
+
+   }
+}
