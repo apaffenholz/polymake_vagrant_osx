@@ -100,7 +100,9 @@ Vagrant.configure(2) do |config|
             jupyter_port = data["host_jupyter_port_base"] + 10 * (i - os_versions[0]) + j
             ip           = "192.168." + (33 + j).to_s + ".#{i}"
             if i == 11 
-               if type == "brew"
+               node.vm.provision :shell, :inline => 'softwareupdate -l', :name => "updating clang"
+               node.vm.provision :shell, :inline => 'softwareupdate -i "Command Line Tools (macOS El Capitan version 10.11) for Xcode-8.2"', :name => "updating clang"
+               if type == "bundle"
                   ip = "192.168.50.100"
                end
             end
@@ -117,6 +119,9 @@ Vagrant.configure(2) do |config|
             # define share to data subfolder
             node.vm.synced_folder data["data_source"],   "/data",  type: "nfs", map_uid: 502
             node.vm.synced_folder data["shared_source"], "/share", type: "nfs", map_uid: 502
+            if type == "bundle"
+               node.vm.synced_folder data["bundle_git"], "/Users/vagrant/bundle_git", type: "nfs", map_uid: 502
+            end
 
             # install java
             node.vm.provision :shell, :path => "resources/install_java.sh", :args => data['jdk_version'], :name => "install_java"

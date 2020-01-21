@@ -3,7 +3,8 @@
    "cores" : 2,
    "data_source" : "data/",
    "shared_source" : "share/",
-   "jdk_version" : "11.0.2",
+   "bundle_git" : "bundle_git/",
+   "jdk_version" : "12",
    "xquartz_version" : "XQuartz",
    "tex_version" : "mactex-basictex-20180417",
    "python" : {

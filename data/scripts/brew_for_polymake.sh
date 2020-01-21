@@ -11,6 +11,7 @@ brew install ppl
 brew install python3
 brew install ninja
 brew install ccache
+cpanm install Net::SSLeay
 sudo -H pip3 install jupyter
 
 yes N | perlbrew install-cpanm
