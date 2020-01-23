@@ -3,6 +3,7 @@
    "cores" : 2,
    "data_source" : "data/",
    "shared_source" : "share/",
+   "jupyter_notebooks" : "notebooks/",
    "bundle_git" : "bundle_git/",
    "jdk_version" : "12",
    "xquartz_version" : "XQuartz",

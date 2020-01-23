@@ -98,7 +98,7 @@ Vagrant.configure(2) do |config|
             ssh_port     = data["host_ssh_port_base"] + 10 * (i - os_versions[0]) + j
             http_port    = data["host_http_port_base"] + 10 * (i - os_versions[0]) + j
             jupyter_port = data["host_jupyter_port_base"] + 10 * (i - os_versions[0]) + j
-            ip           = "192.168." + (33 + j).to_s + ".#{i}"
+            ip           = "192.168." + (34 + j).to_s + ".#{i}"
             if i == 11 
                node.vm.provision :shell, :inline => 'softwareupdate -l', :name => "updating clang"
                node.vm.provision :shell, :inline => 'softwareupdate -i "Command Line Tools (macOS El Capitan version 10.11) for Xcode-8.2"', :name => "updating clang"
@@ -119,6 +119,7 @@ Vagrant.configure(2) do |config|
             # define share to data subfolder
             node.vm.synced_folder data["data_source"],   "/data",  type: "nfs", map_uid: 502
             node.vm.synced_folder data["shared_source"], "/share", type: "nfs", map_uid: 502
+            node.vm.synced_folder data["jupyter_notebooks"], "/Users/vagrant/notebooks", type: "nfs", map_uid: 502
             if type == "bundle"
                node.vm.synced_folder data["bundle_git"], "/Users/vagrant/bundle_git", type: "nfs", map_uid: 502
             end

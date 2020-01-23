@@ -13,6 +13,11 @@ brew install ninja
 brew install ccache
 cpanm install Net::SSLeay
 sudo -H pip3 install jupyter
+sudo -H pip3 install jupyter_contrib_nbextensions
+jupyter contrib nbextension install --user
+jupyter nbextensions_configurator enable --user
+sudo -H pip3 install jupyter_nbextensions_configurator
+sudo -H pip3 install RISE
 
 yes N | perlbrew install-cpanm
 cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
@@ -32,3 +37,4 @@ cpanm Moo
 cpanm ZEFRAM/Module-Runtime-0.013.tar.gz
 cpanm MongoDB
 cpanm JSON
+
