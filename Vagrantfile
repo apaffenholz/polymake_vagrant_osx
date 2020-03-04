@@ -85,12 +85,18 @@ Vagrant.configure(2) do |config|
       os_versions.each do |i|
          config.vm.define "osx.#{i}.#{type}" do |node|
 
-#            if i == 13 
-#               node.vm.box              = "osx-10.13b"
-#               node.vm.base_mac = "0800273129DC"
-#            else 
+            path_prefix = ''
+            if i == 15
+               path_prefix = '/Users/vagrant'
+            end
+         
+
+            if i == 15 
+               node.vm.box              = "osx-10.15"
+               node.vm.base_mac = "0800273D562A"
+            else 
                node.vm.box              = "osx-10.#{i}"
-#            end
+            end
             machine_name             = "osx.#{i}.#{type}"
             node.vm.box_check_update = false
 
@@ -106,6 +112,10 @@ Vagrant.configure(2) do |config|
                   ip = "192.168.50.100"
                end
             end
+            if i == 14 
+               node.vm.provision :shell, :inline => 'softwareupdate -l', :name => "updating clang"
+               node.vm.provision :shell, :inline => 'softwareupdate -i "Command Line Tools (macOS Mojave version 10.14) for Xcode-10.3"', :name => "updating clang"
+            end
 
             # port forwarding and ip
             node.vm.network :forwarded_port, guest:   22, host: ssh_port
@@ -117,37 +127,44 @@ Vagrant.configure(2) do |config|
             node.vm.synced_folder ".", "/vagrant", disabled: true
             
             # define share to data subfolder
-            node.vm.synced_folder data["data_source"],   "/data",  type: "nfs", map_uid: 502
-            node.vm.synced_folder data["shared_source"], "/share", type: "nfs", map_uid: 502
+            node.vm.synced_folder data["data_source"],   path_prefix + "/data",  type: "nfs", map_uid: 502
+            node.vm.synced_folder data["shared_source"], path_prefix + "/share", type: "nfs", map_uid: 502
             node.vm.synced_folder data["jupyter_notebooks"], "/Users/vagrant/notebooks", type: "nfs", map_uid: 502
             if type == "bundle"
                node.vm.synced_folder data["bundle_git"], "/Users/vagrant/bundle_git", type: "nfs", map_uid: 502
             end
 
             # install java
-            node.vm.provision :shell, :path => "resources/install_java.sh", :args => data['jdk_version'], :name => "install_java"
+            node.vm.provision :shell, :path => "resources/install_java.sh", :args => [ data['jdk_version'], path_prefix ], :name => "install_java"
 
             # install tex
-            node.vm.provision :shell, :path => "resources/install_tex.sh", :args => data['tex_version'], :name => "install_tex"
+            node.vm.provision :shell, :path => "resources/install_tex.sh", :args => [ data['tex_version'][i.to_s], path_prefix ], :name => "install_tex"
             
             # set message of the day to report ip, type, version, repo, branch and ports of the machine
-            node.vm.provision :shell, :inline => "/data/scripts/motd.sh 'ssh port' #{ssh_port} 'http_port' #{http_port} 'jupyter_port' #{jupyter_port} 'type' #{type} 'version' #{i} 'repo' #{repo} 'branch' #{branch}", :name => "install_motd"
+            node.vm.provision :shell, :inline => path_prefix + "/data/scripts/motd.sh 'ssh port' #{ssh_port} 'http_port' #{http_port} 'jupyter_port' #{jupyter_port} 'type' #{type} 'version' #{i} 'repo' #{repo} 'branch' #{branch}", :name => "install_motd"
             
             # add host key of polymake.org
             node.vm.provision "shell" do |s|
-               s.inline = "/data/scripts/add_known_hosts.sh"
+               s.inline = path_prefix + "/data/scripts/add_known_hosts.sh"
                s.privileged = false
                s.name = "add_known_hosts"
             end
 
-            node.vm.provision "shell", inline: "echo \"export CCACHE_DIR=/share/#{machine_name}/ccache\" >> /etc/profile", run: "always"
+            node.vm.provision "shell", inline: "echo \"export CCACHE_DIR="+ path_prefix + "/share/#{machine_name}/ccache\" >> /etc/profile", run: "always"
 
             if i == 14
                node.vm.provision :shell, :path => "resources/install_SDK_headers_10.14.sh", :name => "SDK headers"
             end
+            if i == 15 
+               node.vm.provision "shell" do |s|
+                  s.inline = path_prefix + "/data/scripts/install_clt.sh " + data['clt'] + " " + path_prefix
+                  s.name = "install clt"
+                  s.privileged=true
+               end
+            end
             node.vm.provision "shell" do |s|
             
-               s.inline = "/data/scripts/install_ccache.sh " + machine_name + " " + data['ccache']['pkg_name']
+               s.inline = path_prefix + "/data/scripts/install_ccache.sh " + machine_name + " " + data['ccache']['pkg_name'] + " " + path_prefix
                s.name = "install ccache"
                s.privileged=false
             end
@@ -158,9 +175,10 @@ Vagrant.configure(2) do |config|
                   node.vm.provision "shell" do |s|
                      full_args = ""
                      if brew_base
-                        full_args = brew_base
+                        full_args = " -b " + brew_base
                      end
-                     s.inline = "/data/scripts/brew_base_system.sh " + full_args
+                     full_args += " -v 10." + i.to_s
+                     s.inline = path_prefix + "/data/scripts/brew_base_system.sh " + full_args
                      s.privileged = false
                   end
                when "fink"
@@ -168,13 +186,13 @@ Vagrant.configure(2) do |config|
                   node.vm.provision :shell, :inline => "mkdir -p /Users/vagrant/Downloads"
                   full_args = " " + data["type"]["fink"]["fink_base"] + " " + data["type"]["fink"]["fink_version"] + " " + data["type"]["fink"]["fink_install_tool_name"]
                   node.vm.provision "shell" do |s|
-                     s.inline = "/data/scripts/fink_base_system.sh " + full_args 
+                     s.inline = path_prefix + "/data/scripts/fink_base_system.sh " + full_args 
                      s.privileged = false
                   end
                when "bundle"
-                  node.vm.provision :shell, :path => "resources/install_python.sh", :args => [ data['python']['version'], data['python']['pkg_name'] ]
+                  node.vm.provision :shell, :path => "resources/install_python.sh", :args => [ data['python']['version'], data['python']['pkg_name'], path_prefix ]
                   node.vm.provision "shell" do |s|
-                     s.inline = "/data/scripts/polymake_bundle_prepare.sh"
+                     s.inline = path_prefix + "/data/scripts/polymake_bundle_prepare.sh"
                      s.privileged = false
                   end
             end
@@ -187,14 +205,15 @@ Vagrant.configure(2) do |config|
                      if brew_base
                         full_args += " -p " + brew_base
                      end
+                     full_args += " -v 10." + i.to_s
                      node.vm.provision "shell" do |s|
-                        s.inline = "/data/scripts/brew_for_polymake.sh " + full_args
+                        s.inline = path_prefix + "/data/scripts/brew_for_polymake.sh " + full_args
                         s.privileged = false
                      end
                   when "fink"
                      node.vm.provision "shell" do |s|
                         full_args = " -b " + branch + " -r " + repo + " -m " + machine_name
-                        s.inline = "/data/scripts/fink_for_polymake.sh" + full_args
+                        s.inline = path_prefix + "/data/scripts/fink_for_polymake.sh" + full_args
                         s.privileged = false
                      end
                      # jupyter needs to be installed as root
@@ -209,25 +228,25 @@ Vagrant.configure(2) do |config|
                case type
                   when "brew"
                      node.vm.provision "shell" do |s|
-                        full_args = " -b " + branch + " -r " + repo + " -m " + machine_name
-                        s.inline = "/data/scripts/polymake_with_brew.sh " + full_args
+                        full_args = " -b " + branch + " -r " + repo + " -m " + machine_name + " -p " + path_prefix
+                        s.inline = path_prefix + "/data/scripts/polymake_with_brew.sh " + full_args
                         s.privileged = false
                      end
                   when "fink"
                      node.vm.provision "shell" do |s|
-                        s.inline = "/data/scripts/polymake_with_fink.sh " + full_args
+                        s.inline = path_prefix + "/data/scripts/polymake_with_fink.sh " + full_args + " -p " + path_prefix
                         s.privileged = false
                      end
                   when "plain"
-                     full_args = "-b " + branch + " -m " + machine_name + " -r " + repo
+                     full_args = "-b " + branch + " -m " + machine_name + " -r " + repo + " -p " + path_prefix
                      node.vm.provision "shell" do |s|
-                        s.inline = "script -q /dev/null /data/scripts/polymake_plain.sh " + full_args
+                        s.inline = "script -q /dev/null " + path_prefix + "/data/scripts/polymake_plain.sh " + full_args
                         s.privileged = false
                         s.name = "install polymake"
                      end
                   when "bundle"
                      node.vm.provision "shell" do |s|
-                        s.inline = "/data/scripts/polymake_bundle_compile.sh"
+                        s.inline = path_prefix + "/data/scripts/polymake_bundle_compile.sh "  + path_prefix
                         s.privileged = false
                      end
                end

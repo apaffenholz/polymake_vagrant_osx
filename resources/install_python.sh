@@ -1,11 +1,11 @@
 #!/bin/bash
 
 if [ ! -d /Library/Frameworks/Python.Framework/Versions/${1} ]; then
-   if [ ! -f /data/pkg/${2}.pkg ]; then
-      cd /data/pkg
+   if [ ! -f ${3}/data/pkg/${2}.pkg ]; then
+      cd ${3}/data/pkg
       curl -O -L https://www.python.org/ftp/python/${1}/${2}.pkg
    fi
-   sudo -S installer -verbose -pkg "/data/pkg/${2}.pkg" -target /
+   sudo -S installer -verbose -pkg "${3}/data/pkg/${2}.pkg" -target /
 fi
 
 pip3 install jupyter

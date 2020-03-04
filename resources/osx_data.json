@@ -7,7 +7,13 @@
    "bundle_git" : "bundle_git/",
    "jdk_version" : "12",
    "xquartz_version" : "XQuartz",
-   "tex_version" : "mactex-basictex-20180417",
+   "tex_version" : {
+      "11" : "mactex-basictex-20180417",
+      "12" : "mactex-basictex-20191011",
+      "13" : "mactex-basictex-20191011",
+      "14" : "mactex-basictex-20191011",
+      "15" : "mactex-basictex-20191011"
+   },
    "python" : {
       "version" : "3.8.0a1",
       "pkg_name" : "python-3.8.0a1-macosx10.9"
@@ -16,11 +22,12 @@
       "version" : "3.6",
       "pkg_name" : "ccache-3.6"
    },
+   "clt" : "Command_Line_Tools_for_Xcode_11.3.dmg",
    "host_ssh_port_base" : 2230,
    "host_http_port_base" : 8100, 
    "host_jupyter_port_base" : 8800, 
    "polymake_root" : "data/polymake_src",
-   "os_versions" : [10,11,12,13,14],
+   "os_versions" : [11,12,13,14,15],
    "types" : ["brew","fink","plain","bundle"],
    "branches" : ["master","feature/bundled/polydb"],
    "type" : {

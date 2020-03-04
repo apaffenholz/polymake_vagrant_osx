@@ -43,11 +43,11 @@ CANARYVERSION=2012
 CANARYNAME=Canary-Stability-$CANARYVERSION.tar.gz
 CANARYBASE=https://cpan.metacpan.org/authors/id/M/ML/MLEHMANN
 
-JSONXSVERSION=4.0
+JSONXSVERSION=4.02
 JSONXSNAME=JSON-XS-$JSONXSVERSION.tar.gz
 JSONXSBASE=https://cpan.metacpan.org/authors/id/M/ML/MLEHMANN
 
-JSONVERSION=2.95
+JSONVERSION=4.02
 JSONNAME=JSON-$JSONVERSION.tar.gz
 JSONBASE=https://cpan.metacpan.org/authors/id/I/IS/ISHIGAKI
 
@@ -327,12 +327,15 @@ cd $CURDIR
 
 echo "building termreadline"
 set_prefix "building termreadline"
+if [[ "$MACVERSION" == "10.15" ]]; then
+  CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Perl/5.18/darwin-thread-multi-2level/CORE/
+fi
 cd $SRC_DIR
 if [ ! -d Term-ReadLine-Gnu-$TERMRLGNUVERSION ]; then
     tar xvfz $TAR_DIR/$TERMRLGNUNAME
 fi
 cd Term-ReadLine-Gnu-$TERMRLGNUVERSION
-ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=$INSTALL_DIR/perl-modules --prefix=$INSTALL_DIR && make && make install
+CPATH=$CPATH_DIR  ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=$INSTALL_DIR/perl-modules --prefix=$INSTALL_DIR && make && make install
 cd $CURDIR
 
 echo "building perl modules"
@@ -383,7 +386,7 @@ fi
 export PATH=$INSTALL_DIR/bin:$PATH
 
 export PERL5LIB=$INSTALL_DIR/perl-modules/lib/perl5/darwin-thread-multi-2level:$INSTALL_DIR/perl-modules/lib/perl5/site_perl:$PERL5LIB
-if [ ! -f $HOME/.bash_profile || ! `grep "PERL5LIB.*dependencies" $HOME/.bash_profile` ]; then
+if [[ ! -f $HOME/.bash_profile || ! `grep "PERL5LIB.*dependencies" $HOME/.bash_profile` ]]; then
     echo "export PERL5LIB=$INSTALL_DIR/perl-modules/lib/perl5/darwin-thread-multi-2level:$INSTALL_DIR/perl-modules/lib/perl5/site_perl:$PERL5LIB" >> $HOME/.bash_profile
 fi
 echo "building polymake in $POLYMAKE_SRC_DIR"
@@ -403,9 +406,10 @@ cat > polymake_configure.$NAME <<EOF
 	--with-boost=$INSTALL_DIR/boost \\
 	--with-gmp=$INSTALL_DIR \\
 	--with-mpfr=$INSTALL_DIR \\
-	--with-singular=$INSTALL_DIR \\
 	--with-jni-headers=$JNIHEADERS \\
-	--with-ppl=$INSTALL_DIR \\
+	--with-ppl=$INSTALL_DIR
+
+#	--with-singular=$INSTALL_DIR \\
 
 EOF
 
