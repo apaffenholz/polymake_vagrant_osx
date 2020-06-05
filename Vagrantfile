@@ -89,14 +89,26 @@ Vagrant.configure(2) do |config|
             if i == 15
                path_prefix = '/Users/vagrant'
             end
-         
+
+            node.vm.box              = "osx-10.#{i}"
+
+            if i == 14
+               node.vm.box              = "osx-10.14.6"
+               node.vm.base_mac = "080027948FE9"
+               node.vm.provider "virtualbox" do |vb|
+                  vb.customize ["modifyvm", :id, "--cpuidset", "1","000206a7","02100800","1fbae3bf","bfebfbff"]
+                  vb.customize ["setextradata", :id, "VBoxInternal/Devices/efi/0/Config/DmiSystemProduct", "MacBookPro11,3"]
+                  vb.customize ["setextradata", :id, "VBoxInternal/Devices/efi/0/Config/DmiSystemVersion", "1.0"]
+                  vb.customize ["setextradata", :id, "VBoxInternal/Devices/efi/0/Config/DmiBoardProduct", "Iloveapple"]
+                  vb.customize ["setextradata", :id, "VBoxInternal/Devices/smc/0/Config/DeviceKey", "ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"]
+              end
+             end
 
             if i == 15 
                node.vm.box              = "osx-10.15"
                node.vm.base_mac = "0800273D562A"
-            else 
-               node.vm.box              = "osx-10.#{i}"
             end
+
             machine_name             = "osx.#{i}.#{type}"
             node.vm.box_check_update = false
 
