@@ -86,7 +86,7 @@ Vagrant.configure(2) do |config|
          config.vm.define "osx.#{i}.#{type}" do |node|
 
             path_prefix = ''
-            if i == 15
+            if ( i == 15 ) || ( i < 10 )
                path_prefix = '/Users/vagrant'
             end
 
@@ -108,15 +108,22 @@ Vagrant.configure(2) do |config|
                node.vm.box              = "osx-10.15"
                node.vm.base_mac = "0800273D562A"
             end
+            if i == 1
+               node.vm.box              = "osx-11.1"
+            end
 
             machine_name             = "osx.#{i}.#{type}"
             node.vm.box_check_update = false
 
             # set ports and ip
-            ssh_port     = data["host_ssh_port_base"] + 10 * (i - os_versions[0]) + j
-            http_port    = data["host_http_port_base"] + 10 * (i - os_versions[0]) + j
-            jupyter_port = data["host_jupyter_port_base"] + 10 * (i - os_versions[0]) + j
-            ip           = "192.168." + (34 + j).to_s + ".#{i}"
+            iport = i
+            if i < 10 
+               iport += 15
+            end
+            ssh_port     = data["host_ssh_port_base"] + 10 * (iport - os_versions[0]) + j
+            http_port    = data["host_http_port_base"] + 10 * (iport - os_versions[0]) + j
+            jupyter_port = data["host_jupyter_port_base"] + 10 * (iport - os_versions[0]) + j
+            ip           = "192.168." + (34 + j).to_s + ".#{iport}"
             if i == 11 
                node.vm.provision :shell, :inline => 'softwareupdate -l', :name => "updating clang"
                node.vm.provision :shell, :inline => 'softwareupdate -i "Command Line Tools (macOS El Capitan version 10.11) for Xcode-8.2"', :name => "updating clang"
@@ -189,7 +196,11 @@ Vagrant.configure(2) do |config|
                      if brew_base
                         full_args = " -b " + brew_base
                      end
-                     full_args += " -v 10." + i.to_s
+                     if i < 10
+                        full_args += " -v 10." + i.to_s
+                     else 
+                        full_args += " -v 11." + i.to_s
+                     end
                      s.inline = path_prefix + "/data/scripts/brew_base_system.sh " + full_args
                      s.privileged = false
                   end
@@ -217,7 +228,11 @@ Vagrant.configure(2) do |config|
                      if brew_base
                         full_args += " -p " + brew_base
                      end
-                     full_args += " -v 10." + i.to_s
+                     if i < 10
+                        full_args += " -v 10." + i.to_s
+                     else 
+                        full_args += " -v 11." + i.to_s
+                     end
                      node.vm.provision "shell" do |s|
                         s.inline = path_prefix + "/data/scripts/brew_for_polymake.sh " + full_args
                         s.privileged = false

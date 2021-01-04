@@ -12,7 +12,8 @@
       "12" : "mactex-basictex-20191011",
       "13" : "mactex-basictex-20191011",
       "14" : "mactex-basictex-20191011",
-      "15" : "mactex-basictex-20191011"
+      "15" : "mactex-basictex-20191011",
+      "1"  : "mactex-basictex-20200407"
    },
    "python" : {
       "version" : "3.8.0a1",
@@ -27,7 +28,7 @@
    "host_http_port_base" : 8100, 
    "host_jupyter_port_base" : 8800, 
    "polymake_root" : "data/polymake_src",
-   "os_versions" : [11,12,13,14,15],
+   "os_versions" : [11,12,13,14,15,1],
    "types" : ["brew","fink","plain","bundle"],
    "branches" : ["master","feature/bundled/polydb"],
    "type" : {
