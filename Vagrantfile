@@ -132,8 +132,10 @@ Vagrant.configure(2) do |config|
                end
             end
             if i == 14 
-               node.vm.provision :shell, :inline => 'softwareupdate -l', :name => "updating clang"
-               node.vm.provision :shell, :inline => 'softwareupdate -i "Command Line Tools (macOS Mojave version 10.14) for Xcode-10.3"', :name => "updating clang"
+#               node.vm.provision :shell, :inline => 'softwareupdate -l', :name => "updating clang"
+#               node.vm.provision :shell, :inline => 'softwareupdate -i "Command Line Tools (macOS Mojave version 10.14) for Xcode-10.3"', :name => "updating clang"
+               node.vm.provision :shell, :inline => 'sudo hdiutil attach /data/pkg/Command_Line_Tools_for_Xcode_11.3.1.dmg', :name => "updating clang"
+               node.vm.provision :shell, :inline => 'sudo installer -pkg /Volumes/Command\ Line\ Developer\ Tools/Command\ Line\ Tools.pkg -target /', :name => "updating clang"
             end
 
             # port forwarding and ip
@@ -171,9 +173,9 @@ Vagrant.configure(2) do |config|
 
             node.vm.provision "shell", inline: "echo \"export CCACHE_DIR="+ path_prefix + "/share/#{machine_name}/ccache\" >> /etc/profile", run: "always"
 
-            if i == 14
-               node.vm.provision :shell, :path => "resources/install_SDK_headers_10.14.sh", :name => "SDK headers"
-            end
+#            if i == 14
+#               node.vm.provision :shell, :path => "resources/install_SDK_headers_10.14.sh", :name => "SDK headers"
+#            end
             if i == 15 
                node.vm.provision "shell" do |s|
                   s.inline = path_prefix + "/data/scripts/install_clt.sh " + data['clt'] + " " + path_prefix
