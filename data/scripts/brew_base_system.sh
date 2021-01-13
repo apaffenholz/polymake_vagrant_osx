@@ -28,7 +28,7 @@ else
       fi
       $brew_base/bin/brew doctor
    else
-      echo | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       $brew_base/bin/brew doctor
    fi
 fi
