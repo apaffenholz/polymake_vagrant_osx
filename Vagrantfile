@@ -176,6 +176,18 @@ Vagrant.configure(2) do |config|
 #            if i == 14
 #               node.vm.provision :shell, :path => "resources/install_SDK_headers_10.14.sh", :name => "SDK headers"
 #            end
+            if i == 14  
+              node.vm.provision "shell" do |s|
+                 s.inline = "rm -rf /Library/Developer/CommandLineTools"
+                 s.name = "remove clt"
+                 s.privileged=true
+               end
+               node.vm.provision "shell" do |s|
+                  s.inline = path_prefix + "/data/scripts/install_clt.sh " + data['clt'] + " " + path_prefix
+                  s.name = "install clt"
+                  s.privileged=true
+               end
+            end
             if i == 15 
                node.vm.provision "shell" do |s|
                   s.inline = path_prefix + "/data/scripts/install_clt.sh " + data['clt'] + " " + path_prefix

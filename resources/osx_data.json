@@ -23,7 +23,7 @@
       "version" : "3.6",
       "pkg_name" : "ccache-3.6"
    },
-   "clt" : "Command_Line_Tools_for_Xcode_11.3.dmg",
+   "clt" : "Command_Line_Tools_for_Xcode_11.3.1.dmg",
    "host_ssh_port_base" : 2230,
    "host_http_port_base" : 8100, 
    "host_jupyter_port_base" : 8800, 
