@@ -109,7 +109,7 @@ Vagrant.configure(2) do |config|
                node.vm.base_mac = "0800273D562A"
             end
             if i == 1
-               node.vm.box              = "osx-11.1"
+               node.vm.box              = "osx-11.3"
             end
 
             machine_name             = "osx.#{i}.#{type}"
